@@ -4,10 +4,13 @@ import {
   Get,
   HttpException,
   HttpStatus,
+  Param,
+  ParseIntPipe,
   Post,
   Put,
 } from '@nestjs/common';
 import { SongsService } from './songs.service';
+import { isString } from 'util';
 
 @Controller('songs')
 export class SongsController {
@@ -29,8 +32,14 @@ export class SongsController {
     }
   }
   @Get(':id')
-  findOne() {
-    return 'This action returns a #${id} song';
+  findOne(
+    @Param(
+      'id',
+      new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE }),
+    )
+    id: number,
+  ) {
+    return `fetching song with id #${typeof id}`;
   }
   @Put(':id')
   update() {
